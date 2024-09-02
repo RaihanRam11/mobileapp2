@@ -1,5 +1,5 @@
-export default function Work(){
+export default function Work (){
     return (
-        <>work</>
+        <> Work </>
     );
 }
