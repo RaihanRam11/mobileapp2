@@ -13,17 +13,25 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={inter.className}>
         
-        <header>
+        <header className="p">
           <nav className="w-full">
             <div className="max"></div>
             <div className="max-w-7xl mx-auto px-6 md:pl-12 xl:px-6">
               <div className="flex flex-warp items-center justify-between">
-                <div>Logo</div>
+                <div>
+                 <a href="/">Logo</a>
+                </div>
                 <div>
                   <ul className="flex flex-row gap-6">
-                    <li>about</li>
-                    <li>Contact</li>
-                    <li>Work</li>
+                    <li>
+                      <a href="about">about</a>
+                    </li>
+                    <li>
+                      <a href="contact">contact</a>
+                    </li>
+                    <li>
+                      <a href="work">work</a>
+                    </li>
                   </ul>
                 </div>
               </div>
