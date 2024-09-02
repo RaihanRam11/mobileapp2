@@ -16,7 +16,7 @@ export default function RootLayout({ children }) {
         <header>
           <nav className="w-full">
             <div className="max"></div>
-            <div className="max-w-7xl max-auto px-6 md:pl-12 xl:px-6">
+            <div className="max-w-7xl mx-auto px-6 md:pl-12 xl:px-6">
               <div className="flex flex-warp items-center justify-between">
                 <div>Logo</div>
                 <div>
