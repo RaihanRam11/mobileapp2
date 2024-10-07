@@ -1,89 +1,124 @@
 "use client"
+import { useState } from "react";
+import Card from '../../../../components/card';
+import { METHODS } from "http";
 
-import { useState, useEffect } from 'react'
+export default function AdminWork(){
+    const [data, setData] = useState({
+        title:'',
+        employeType:'',
+        companyName:'',
+        location:'',
+        startDate:'',
+        endDate:'',
+    });
 
-const ItemCard = ({label, value})=>{
-    return (
-        <div className='flex gap-4 bg-white  rounded-md m-2 p-2'>
-            <div>{ label }</div>
-            <div>{ value }</div>
-        </div>
-    )
+    const optEmployeType = [
+        {label:'Full Time', value:'full-time'},
+        {label:'Part Time', value:'part-time'},
+        {label:'Contract', value:'contract'},
+        {label:'Internship', value:'internship'}
+      ]
     
-}
+      const optLocation = [
+        {label:'Onsite', value:'nsite'},
+        {label:'WFH', value:'wfh'},
+      ]
 
-export default function Contact(){
-    const [data, setData] = useState([])
-    const [isLoading, setLoading] = useState(true)
-
-    async function onLoadData() {
-        setLoading(true)
-        let res = await fetch('/api/contact')
-        let data = await res.json()
-        setData(data)
-        setLoading(false)
+    const inputHandler=(e) =>{
+        setData({...data, [e.target.name]: e.target.value})
     }
 
-    useEffect(() => {
-        onLoadData()
-    }, [])
+    async function onSubmitData() {
+        try{
+            if(typeof req.body !== "object"){
+                throw new Error('invalid request')
+            }
 
-    return (
-        <> 
-            <div className="flex mt-16">
-                <div className="md:w-3/4 px-4 ">
-                    <div className=" bg-white p-10  rounded-xl">
-                        <h3 className="text-2xl py-2">Add Experience</h3>
-                        <div className="flex gap-6">
-                            <div>
-                                <label>Title</label>
-                                
-                                <input type="text" className="border my-input-text"/>
-                                
-                            </div>
-                            <div className="w-full">
+            let myWork = await db.collection("work").insertOne(req.body);
+            res.json({ data: myWork });
+        }catch(err){
+            res.status(422).json({ message: err.message});
+        }
+    }
 
-                            </div>
-                        </div>
-                        <div className="w-full my-2">
-                            <label>Subject</label>
-                            <input type="text" className="my-input-text w-full"/>
-                        </div>
-                        <div className="w-full">
-                            <label>Message</label>
-                            <textarea className="border my-input-text w-full"></textarea>
-                        </div>
-                        <div className="w-full py-2">
-                            <button className="mx-1 h-9 items-center justify-center px-4  rounded-md bg-amber-500">
-                                <label>Send Message</label>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <div className="md:w-1/3">
-
-                {
-                    !isLoading && Object.keys(data.location).map(key => {
-                       return <ItemCard label={key} value={data.location[key]} key={key}/>
-                    })
-                }
-
-                {
-                    !isLoading && Object.keys(data.phone).map(key => {
-                       return <ItemCard label={key} value={data.phone[key]} key={key}/>
-                    })
-                }
-
-                {
-                    !isLoading && Object.keys(data.social).map(key => {
-                       return <ItemCard label={key} value={data.social[key]} key={key}/>
-                    })
-                }
-                
-                   
-                </div>
+    return(<>
+        <Card title="Work From" className="pb-5">
+            <div className="w-full my-2">
+                <label>Title</label>
+                <input
+                    type="text"
+                    name="title"
+                    value={data.title}
+                    onChange={inputHandler}
+                    className="w-full border my-input-text"/>
             </div>
 
-        </>
+            <div className="w-full my-2">
+                <label>employe Type</label>
+                <select
+                    type="employeType"
+                    onChange={inputHandler}
+                    className="w-full border my-input-text">
+                    {
+                        optEmployeType &&
+                        optEmployeType.map((item, key)=>
+                            <option key={key} value={item.value}>{item.label} </option>)
+                    }
+                </select>
+            </div>
+            
+            <div className="w-full my-2">
+                <label>companyName</label>
+                <input
+                    name="companyName"
+                    type="text"
+                    onChange={inputHandler}
+                    className="w-full border my-input-text"/>
+            </div>
+            
+            <div className="w-full my-2">
+                <label>Location</label>
+                <select
+                    name="location"
+                    onChange={inputHandler}
+                    className="w-full border my-input-text">
+                    {
+                        optLocation &&
+                        optLocation.map((item, key)=>
+                            <option key={key} value={item.value}>{item.label} </option>
+                        )
+                    }
+                </select>
+            </div>
+
+            <div className="w-full my-2">
+                <label>Start Date</label>
+                <input
+                    name="startDate"
+                    onChange={inputHandler}
+                    type="date"
+                    className="w-full border my-input-text"/>
+            </div>
+
+            <div className="w-full my-2">
+                <label>End Date</label>
+                <input
+                    name="endDate"
+                    onChange={inputHandler}
+                    type="date"
+                    className="w-full border my-input-text"/>
+            </div>
+            
+            <button className="mx-1 h-9 items-center justify-center px-4 rounded-md bg-amber-500">
+                <label>Submit Data</label>
+            </button>
+            
+            <Card title="List Of Work" style="mt-5">
+                adafaev
+            </Card>
+        </Card>
+    </>
+    
     );
 }

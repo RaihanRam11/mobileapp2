@@ -1,5 +1,5 @@
-export default function AdminWork (){
+export default function Work(){
     return (
-        <> Work </>
+        <>work</>
     );
 }

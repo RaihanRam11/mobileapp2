@@ -3,11 +3,11 @@
 @tailwind utilities;
 
 .my-input-text {
-  @apply p-2 border rounded-md bg-green-100 focus:bg-white;
+  @apply p-2 border rounded-md bg-gray-100 focus:bg-white;
 }
 
 body {
-  @apply bg-lime-200;
+  @apply bg-gray-100;
 }
 
 :root {

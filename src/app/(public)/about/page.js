@@ -1,8 +1,8 @@
-export default function About (){
+export default function About() {
     return (
-        <div>
-            Test
-        </div>
+      <div>
+        tes about
+      </div>
     );
 }
-
+  
