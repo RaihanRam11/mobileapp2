@@ -4,9 +4,16 @@ import { useRouter } from 'next/navigation'
 export default function AdminMenu() {
     const router = useRouter()
 
-    const onLogOut=()=>{
-        router.push('/', { scroll: false })
+    const onLogOut=async()=>{
+        const res =  await fetch(`/api/auth/logout`,{
+          method:'POST',
+      })
+
+      if(res.status==200){
+          router.push('/', { scroll: false })
+      }
     }
+    
 
     return (
         <header className="py-2 bg-white">
