@@ -6,6 +6,7 @@ import WorkList from './component/work-list'
 export default function AdminWork() {
   const [data, setData] = useState({
     title:'',
+    id:'',
     employeType:'',
     companyName:'',
     location:'',
@@ -16,6 +17,7 @@ export default function AdminWork() {
 const clearForm = ()=>{
   setData({
     title:'',
+    id:'',
     employeType:'',
     companyName:'',
     location:'',
@@ -62,8 +64,7 @@ const clearForm = ()=>{
     let resData = await response.json();
    console.log(resData)
     setData({
-      ...data,
-      id: resData.data[0].id,
+      id: resData.data[0]._id,
       title:resData.data[0].title,
       employeType: resData.data[0].employeType,
       companyName: resData.data[0].companyName,
@@ -163,22 +164,27 @@ const clearForm = ()=>{
               type="date" 
               className="w-full border my-input-text"/>
         </div>
-        {data.id}---
-            {
-               data.id !='' ? 
-              <button 
-                onClick={onUpdateData}
-                className="mx-1 h-9 items-center justify-center px-4  rounded-md bg-amber-500">
-                  <label>Update Data</label>
-              </button> :
 
-              <button 
-                onClick={onSubmitData}
-                className="mx-1 h-9 items-center justify-center px-4  rounded-md bg-amber-500">
-                  <label>Submit Data</label>
-              </button>
+            {
+               data.id.length > 0 ?
+                <button 
+                  onClick={onUpdateData}
+                  className="mx-1 h-9 items-center justify-center px-4  rounded-md bg-amber-500">
+                    <label>Update Data</label>
+                </button> 
+              :
+                <button 
+                  onClick={onSubmitData}
+                  className="mx-1 h-9 items-center justify-center px-4  rounded-md bg-amber-500">
+                    <label>Submit Data</label>
+                </button>
             }
-        
+
+         <button 
+            onClick={clearForm}
+            className="mx-1 h-9 items-center justify-center px-4  rounded-md bg-amber-500">
+              <label>Cancel</label>
+          </button>
       </Card>
       
       <Card title="List of Work" style="mt-5">
