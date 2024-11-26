@@ -1,41 +1,42 @@
+
 import type { NextApiRequest, NextApiResponse } from 'next'
 import clientPromise from "../../../lib/mongodb";
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(req:NextApiRequest, res:NextApiResponse) {
     const client = await clientPromise;
     const db = client.db(process.env.MONGODB_NAME);
 
     switch (req.method) {
         case "POST":
-            try {
+            try{
+                // const body = req.body
                 const body = JSON.parse(req.body)
-                //const body = req.body
-                if (typeof body !== "object") {
+                if(typeof body !== "object"){
                     throw new Error('invalid request')
                 }
-
-                if (body.title == "") {
+                
+                if( body.title == ""){
                     throw new Error('title is required')
                 }
 
-                if (body.subTitle == "") {
+                if( body.subTitle == ""){
                     throw new Error('subTitle is required')
                 }
 
-                if (body.content == "") {
+                if( body.content == ""){
                     throw new Error('content is required')
                 }
 
-                let education = await db.collection("blogs").insertOne(body);
-                res.status(200).json({ data: education, message: 'data berhasil di simpan' });
+                let blogs = await db.collection("blogs").insertOne(body);
+                res.status(200).json({ data: blogs, message:'data berhasil di simpan' });
 
-            } catch (err) {
-                res.status(422).json({ message: err.message });
+            }catch(err){
+                res.status(422).json({ message: err.message});
             }
             break;
         default:
             const blogsData = await db.collection("blogs").find({}).toArray();
             res.json({ data: blogsData });
-            break;
+        break;
     }
 }

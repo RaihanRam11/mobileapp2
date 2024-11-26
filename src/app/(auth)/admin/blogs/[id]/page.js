@@ -1,48 +1,61 @@
-'use client'
+"use client"
+import { useRouter, useParams } from 'next/navigation';
 import Card from '../../../../../components/card';
+import { useEffect, useState, useRef } from 'react';
 import ConfigDialog from '../../../../../components/ConfirmDialog'
-import { useState } from 'react'
-import { useRef } from 'react';
 import { Editor } from '@tinymce/tinymce-react';
 
-export default function AdminBlogsForm() {
+export default function EditBlogs() {
+    const router= useRouter()
     const editorRef = useRef(null);
+    const params = useParams()
     const [modal, setModal] = useState(false)
     const [modalTitle, setModalTitle] = useState("")
     const [modalMessage, setModalMessage] = useState("")
+    const [isOkOnly, setIsOkOnly] = useState(true)
     const [data, setData] = useState({
         title:'',
         subTitle:'',
         content:'',
+        _id:''
     });
 
-    const clearData = ()=>{
-        setData({
-            title:'',
-            subTitle:'',
-            content:'',
-        })
+
+    const fetDataById = async ()=>{
+        try{
+            const res = await fetch(`/api/blogs/${params.id}`);
+            let responseData = await res.json()
+            setData(responseData.data)
+
+        }catch(err){
+            console.error("ERR", err.message)
+            setModal(true)
+            setModalTitle('Err')
+            setModalMessage(err.message)
+        }
+    }
+
+    const onCancel=()=>{
+        setModal(false)
+    }
+
+    const onOkOnly=()=>{
+        setModal(false)
+        router.push('/admin/blogs')
     }
 
     const inputHandler= (e) =>{
         setData({...data, [e.target.name]: e.target.value })
     }
 
-    const onCancel=()=>{
-        setModal(false)
-        setModalTitle('')
-        setModalMessage('')
-        clearData()
-    }
-
-    async function onSubmitData() {
+    const onSubmitData=async ()=>{
         try{
             if (editorRef.current) {
                 const body = data
                 body.content = editorRef.current.getContent();
 
-                let res = await fetch('/api/blogs', {
-                    method:'POST',
+                let res = await fetch(`/api/blogs/${data._id}`, {
+                    method:'PUT',
                     body: JSON.stringify(body),
                 })
 
@@ -60,12 +73,15 @@ export default function AdminBlogsForm() {
           setModalTitle('Err')
           setModalMessage(err.message)
         }
-      }
+    }
+
+    useEffect(()=>{
+        fetDataById()
+    },[])
 
     return (
-    <>
-
-        <Card title="Blogs Form">
+      <>
+        <Card title="Blogs Edit Form">
             <div className="w-full my-2">
                 <label>Title</label>
                     <input 
@@ -85,9 +101,7 @@ export default function AdminBlogsForm() {
                         className="w-full border my-input-text"/>
             </div>
 
-            <div className="w-full my-2">
-                <label>Content</label>
-                <Editor
+            <Editor
                     id='content'
                     apiKey='hz9os6h0p1826jcqknks4q1fm8yl9khctaa7nmexkf0rnx2e'
                     onInit={(_evt, editor) => editorRef.current = editor}
@@ -107,23 +121,23 @@ export default function AdminBlogsForm() {
                     content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
                     }}
                 />
-            </div>
 
             <button  className="btn-primary" onClick={onSubmitData}>
                 <span className="relative text-sm font-semibold text-white">
                     Save Data
                 </span>
-            </button>
+            </button> 
         </Card>
 
         <ConfigDialog  
-            onOkOny={()=>onCancel()} 
+            onOkOny={()=>onOkOnly()} 
             showDialog={modal}
             title={modalTitle}
             message={modalMessage}
             onCancel={()=>onCancel()} 
-            onOk={()=>onCancel()} 
-            isOkOnly={true} />
-    </>
-    )
+            onOk={()=>onConfirmOk()} 
+            isOkOnly={isOkOnly} />
+      </>
+    );
 }
+  
