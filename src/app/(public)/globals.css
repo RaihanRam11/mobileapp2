@@ -18,7 +18,7 @@
 }
 
 body {
-  @apply bg-lime-100;
+  @apply bg-yellow-100;
 }
 
 :root {
