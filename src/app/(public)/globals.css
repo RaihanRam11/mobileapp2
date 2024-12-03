@@ -18,11 +18,7 @@
 }
 
 body {
-<<<<<<< HEAD
   @apply bg-gray-100;
-=======
-  @apply bg-yellow-100;
->>>>>>> 15d6d5b034de14991ae57cfbdde155e817b65062
 }
 
 :root {
