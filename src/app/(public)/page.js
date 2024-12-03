@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 
+=======
+>>>>>>> 15d6d5b034de14991ae57cfbdde155e817b65062
 const ItemService=({
   title,
   subTitle
@@ -32,7 +35,11 @@ export default function Dashboard() {
         <div className='flex w-full bg-white rounded-xl '>
           <div className="flex-1 p-10">
             <div className="font-extrabold text-[48px] mt-10">
+<<<<<<< HEAD
               <div>I&lsquo;m Rayan Adlrdard</div>
+=======
+              <div>I&lsquo;Raihan</div>
+>>>>>>> 15d6d5b034de14991ae57cfbdde155e817b65062
               <div>
                 <span className="text-[#FFB400]">Front-end</span> Developer 
               </div>

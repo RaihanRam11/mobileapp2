@@ -15,7 +15,11 @@ export default function PublicMenu() {
             <div className="max-w-5xl mx-auto px-6 md:px-12 xl:px-6">
               <div className="flex flex-wrap items-center justify-between">
                 <div>
+<<<<<<< HEAD
                   <a href="/">Rayan Adlrdard</a>
+=======
+                  <a href="/">Raihan Ramdhani</a>
+>>>>>>> 15d6d5b034de14991ae57cfbdde155e817b65062
                 </div>
                 <div>
                   <ul className="flex flex-row gap-6">

@@ -89,8 +89,11 @@ export default function Blogs(){
                         </div>
                     )
                 }
+<<<<<<< HEAD
                 
                
+=======
+>>>>>>> 15d6d5b034de14991ae57cfbdde155e817b65062
             </div>
         </>
     );
