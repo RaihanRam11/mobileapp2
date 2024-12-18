@@ -1,192 +1,178 @@
-
 "use client"
 import { useState, useEffect } from 'react'
-import Card from '../../../../components/card';
 import { useParams } from 'next/navigation'
-// Komentar
-import { Editor } from '@tinymce/tinymce-react';
-import { useRef } from 'react';
-import ConfigDialog from '../../../../components/ConfirmDialog'
 
-export default function Blogsbyid(){
-    // Komentar
-    const editorRef = useRef(null);
-    const [modal, setModal] = useState(false)
-    const [modalTitle, setModalTitle] = useState("")
-    const [modalMessage, setModalMessage] = useState("")
-    // Komentar end
+export default function Blogsbyid() {
     const params = useParams();
     const [data, setData] = useState(null)
     const [isLoading, setLoading] = useState(true)
-     // Komentar
-    const [datakomen, setDataKomen] = useState({
-        nama:'',
-        email:'',
-        komentar:'',
-        blogId: params.id
-    });
-    const [isLoadingKomentar, setLoadingKomentar]= useState(false)
-    const [dataKomentar, setDataKomentar] = useState([])
-    const clearData = ()=>{
-        setDataKomen({
-            nama:'',
-            email:'',
-            komentar:'',
-            blogId: params.id
-        })
-    } 
-    const inputHandler= (e) =>{
-        setDataKomen({...datakomen, [e.target.name]: e.target.value })
-    }
-    // End Komentar
+    const [comments, setComments] = useState([]);
 
-    const onFetchBlogs=async()=>{
-        try{
+    const initialFormComment = {
+        name: "",
+        email: "",
+        comment: "",
+        blog_id: params.id,
+        role: "admin"
+    };
+
+    const [formData, setFormData] = useState(initialFormComment);
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData((prev) => ({ ...prev, [name]: value }));
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        try {
+            let res = await fetch('/api/comment', {
+                method: 'POST',
+                body: JSON.stringify(formData),
+            })
+
+            let resData = await res.json()
+
+            alert(resData.message);
+
+            setFormData(initialFormComment);
+            fetchComments()
+
+        } catch (error) {
+            alert(error.message);
+        }
+
+    };
+
+    const onFetchBlogs = async () => {
+        try {
             setLoading(true)
             let res = await fetch(`/api/blogs/${params.id}`)
             let data = await res.json()
             setData(data.data)
             setLoading(false)
-        }catch(err){
+        } catch (err) {
             console.log('err', err)
             setData(null)
             setLoading(false)
         }
     }
 
-    const onFetchKomentar=async()=>{
-        try{
-            setLoadingKomentar(true)
-            let res = await fetch(`/api/komenblog/${params.id}`)
-            let data = await res.json()
-            setDataKomentar(data.data)
-            setLoadingKomentar(false)
-        }catch(err){
-            console.log('err', err)
-            setDataKomentar([])
-            setLoadingKomentar(false)
-        }
-    }
+    const fetchComments = async () => {
+        try {
+            const response = await fetch("/api/comment/" + params.id);
 
-    // Komentar
-    const onCancel=()=>{
-        setModal(false)
-        setModalTitle('')
-        setModalMessage('')
-        clearData()
-    }
-    // end Komentar
-
-    async function onSubmitData() {
-        try{
-            if (editorRef.current) {
-                const body = datakomen
-                body.komentar = editorRef.current.getContent();
-
-                let res = await fetch('/api/komenblog', {
-                    method:'POST',
-                    body: JSON.stringify(body),
-                })
-
-                let resData = await res.json()
-                if(!resData.data){
-                throw Error(resData.message)
-                }
-                setModal(true)
-                setModalTitle('Info')
-                setModalMessage(resData.message)
+            if (!response.ok) {
+                throw new Error("Failed to fetch comments");
             }
-        }catch(err){
-          console.error("ERR", err.message)
-          setModal(true)
-          setModalTitle('Err')
-          setModalMessage(err.message)
+            const responseData = await response.json();
+            setComments(responseData.data);
+        } catch (err) {
+            setComments([])
+        } finally {
         }
-      }
+    };
 
-
-    useEffect(()=>{
+    useEffect(() => {
         onFetchBlogs()
-        onFetchKomentar()
-    },[])
+        fetchComments()
+    }, [])
 
-    if(isLoading) return (<>Loading...</>)
+    if (isLoading) return (<>Loading...</>)
 
     return (
         <>
             <div className='margin-0 mx-auto w-2/3'>
                 <h2 className="text-center text-[32px] font-bold w-full">{data.title}</h2>
-                <div className='mb-40 mt-10  ' dangerouslySetInnerHTML={{ __html: data.content }}/>
+                <div className='mt-10  ' dangerouslySetInnerHTML={{ __html: data.content }} />
             </div>
 
-            {/* Start Komentar */}
-            <Card title="Tuliskan komentar">
-            <div className="w-full my-5">
-                <label>Nama</label>
-                    <input 
-                        name='nama'
-                        value={datakomen.nama}
-                        onChange={inputHandler}
-                        type="text" 
-                        className="w-full border my-input-text"/>
-            </div>
+            <br></br>
+            <br></br>
+            <br></br>
 
-            <div className="w-full my-2">
-                <label>Email</label>
-                    <input 
-                        name='email'
-                        value={datakomen.email}
-                        onChange={inputHandler}
-                        className="w-full border my-input-text"/>
-            </div>
 
-            <div className="w-full my-2">
-                <label>Komentar</label>
-                <Editor
-                    id='komentar'
-                    apiKey='hz9os6h0p1826jcqknks4q1fm8yl9khctaa7nmexkf0rnx2e'
-                    onInit={(_evt, editor) => editorRef.current = editor}
-                    initialValue={datakomen.komentar}
-                    init={{
-                    height: 500,
-                    menubar: false,
-                    plugins: [
-                        'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
-                        'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
-                        'insertdatetime', 'media', 'table', 'code', 'help', 'wordcount'
-                    ],
-                    toolbar: 'undo redo | blocks | ' +
-                        'bold italic forecolor | alignleft aligncenter ' +
-                        'alignright alignjustify | bullist numlist outdent indent | ' +
-                        'removeformat | help',
-                    content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
-                    }}
-                />
-            </div>
+            <h1 align="center">Form Comments</h1>
 
-            <button  className="btn-primary" onClick={onSubmitData}>
-                <span className="relative text-sm font-semibold text-white">
-                    Kirim
-                </span>
-            </button>
-        </Card>
-        
-        {
-            dataKomentar.map( (komen,idx) => <Card className="mt-5" key={idx} title={komen.nama}>
-                <div  dangerouslySetInnerHTML={{ __html: komen.komentar }} />
-            </Card> )
-        }
-        
+            <form onSubmit={handleSubmit} className="p-4 max-w-md mx-auto">
+                <div className="mb-4">
+                    <label htmlFor="name" className="block font-medium">
+                        Name:
+                    </label>
+                    <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        value={formData.name}
+                        onChange={handleChange}
+                        className="w-full p-2 border rounded"
+                        required
+                    />
+                </div>
 
-        <ConfigDialog  
-            onOkOny={()=>onCancel()} 
-            showDialog={modal}
-            title={modalTitle}
-            message={modalMessage}
-            onCancel={()=>onCancel()} 
-            onOk={()=>onCancel()} 
-            isOkOnly={true} />
-        {/* End Komentar */}
+                <div className="mb-4">
+                    <label htmlFor="email" className="block font-medium">
+                        Email:
+                    </label>
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleChange}
+                        className="w-full p-2 border rounded"
+                        required
+                    />
+                </div>
+
+                <div className="mb-4">
+                    <label htmlFor="comment" className="block font-medium">
+                        Comment:
+                    </label>
+                    <textarea
+                        id="comment"
+                        name="comment"
+                        value={formData.comment}
+                        onChange={handleChange}
+                        className="w-full p-2 border rounded"
+                        rows="4"
+                        required
+                    />
+                </div>
+
+                <button
+                    type="submit"
+                    className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700"
+                >
+                    Submit
+                </button>
+            </form>
+
+            <br></br><br></br><br></br>
+
+            <h1>List Comments</h1>
+            <table className="min-w-full border-collapse border border-gray-300">
+                <thead>
+                    <tr className="bg-gray-200">
+                        <th className="border border-gray-300 px-4 py-2">Name</th>
+                        <th className="border border-gray-300 px-4 py-2">Email</th>
+                        <th className="border border-gray-300 px-4 py-2">Role</th>
+                        <th className="border border-gray-300 px-4 py-2">Comment</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {comments.map((comment, index) => (
+                        <tr key={index} className="hover:bg-gray-100">
+                            <td className="border border-gray-300 px-4 py-2">{comment.name}</td>
+                            <td className="border border-gray-300 px-4 py-2">{comment.email}</td>
+                            <td className="border border-gray-300 px-4 py-2">{comment.role}</td>
+                            <td className="border border-gray-300 px-4 py-2">{comment.comment}</td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+
         </>
     );
 }
