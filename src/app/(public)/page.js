@@ -1,3 +1,4 @@
+
 const ItemService=({
   title,
   subTitle
@@ -31,12 +32,13 @@ export default function Dashboard() {
         <div className='flex w-full bg-white rounded-xl '>
           <div className="flex-1 p-10">
             <div className="font-extrabold text-[48px] mt-10">
-              <div>I&lsquo;m Rayan Adlrdard</div>
+              <div>Raihan Ramdhani</div>
               <div>
-                <span className="text-[#FFB400]">Front-end</span> Developer 
+                <span className="text-[#FFB400]">Network Engineer</span>
               </div>
             </div>
-            <p className="text-[#767676]">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Et, volutpat feugiat placerat lobortis. Natoque rutrum semper sed suspendisse nunc lectus.</p>
+            <p className="text-[#767676]">Network Engineer adalah seorang profesional teknologi informasi yang bertugas merancang, membangun, mengelola, dan memelihara infrastruktur jaringan komputer. 
+              Sederhananya, mereka adalah arsitek yang membangun jalan raya digital bagi data untuk mengalir dari satu perangkat ke perangkat lainnya..</p>
             <button className="btn-primary mt-5">
               <span className="relative text-sm font-semibold text-white">
                   Here Me
