@@ -80,7 +80,7 @@ export default function Blogs() {
   return (
     <>
       <p className="text-center margin-0 mx-auto w-2/3">
-      Akses Informasi: Dengan jaringan, kita dapat mengakses informasi dari seluruh dunia melalui internet. 
+      Akses Informasi Dengan jaringan, kita dapat mengakses informasi dari seluruh dunia melalui internet. 
       Bayangkan betapa terbatasnya akses kita jika tidak ada jaringan.
 
       </p>
